@@ -1,0 +1,72 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+output/
+outputs/
+different_*
+logs/
+
+# Checkpoints and model weights
+*.ckpt
+*.pth
+*.pt
+!geomix_best.ckpt
+
+# Training outputs
+geomix_mix_training*/
+geomix_single_*/
+ablation_dataset_*/
+ablation_no_sift_*/
+ablation_num_registers_*/
+
+# Data files
+*.npy
+*.npz
+*.h5
+
+# Claude
+.claude/
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# PyCharm
+.idea/
+
+# VS Code
+.vscode/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
