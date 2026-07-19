@@ -23,15 +23,7 @@ pip install . --find-links https://data.pyg.org/whl/torch-1.8.0+cu11.1.html
 
 ## Data Preparation
 
-We follow the data format of [GoMatch](https://github.com/dvl-tum/gomatch) / [DGC-GNN](https://github.com/AaltoVision/DGC-GNN-release): download the processed MegaDepth base data (with SIFT cache) [here](https://drive.google.com/drive/folders/1ae8CHU42wTJleRrlG9GBY4V-PIdqsM0O?usp=sharing) and process 7Scenes / Cambridge with the [GoMatch tools](https://github.com/dvl-tum/gomatch/tree/main/tools), placed under `data/`:
-
-```
-data/
-├── MegaDepth_undistort/            # training + matching evaluation
-└── gomatch_data/                   # 7scenes / cambridge
-```
-
-The SuperPoint / DISK / R2D2 / DeDoDe keypoint caches are generated with [tools/extract_features.py](tools) — see [tools/README.md](tools/README.md).
+See [tools/README.md](tools/README.md) for downloading the datasets and generating the multi-detector keypoint caches.
 
 ## Training & Evaluation
 
@@ -53,7 +45,7 @@ python -m geomix_eval.benchmark --root_dir . --ckpt geomix_best.ckpt \
     --covis_k_nums 10 --odir outputs/eval/cambridge
 ```
 
-Aachen Day-Night uses an [hloc](https://github.com/cvg/Hierarchical-Localization)-based pipeline that retriangulates the 3D model with the chosen detector and writes poses in the [visuallocalization.net](https://www.visuallocalization.net/) format. Download the [dataset](https://www.visuallocalization.net/datasets/) and [retrieval pairs](https://github.com/cvg/Hierarchical-Localization/tree/master/pairs/aachen) to `data/aachen`, then:
+Aachen Day-Night uses an [hloc](https://github.com/cvg/Hierarchical-Localization)-based pipeline that retriangulates the 3D model with the chosen detector and writes poses in the [visuallocalization.net](https://www.visuallocalization.net/) format:
 
 ```
 python eval_aachen.py --detector_2d superpoint --detector_3d superpoint

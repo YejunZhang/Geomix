@@ -1,10 +1,27 @@
-# Data Preparation Tools
+# Data Preparation
 
-`extract_features.py` generates the per-detector keypoint caches
+We follow the data format of [GoMatch](https://github.com/dvl-tum/gomatch) / [DGC-GNN](https://github.com/AaltoVision/DGC-GNN-release):
+
+- **MegaDepth**: download the processed base data (scene files, 3D points, SIFT cache) [here](https://drive.google.com/drive/folders/1ae8CHU42wTJleRrlG9GBY4V-PIdqsM0O?usp=sharing). Images come from the [D2-Net preprocessing](https://github.com/mihaidusmanu/d2-net#downloading-and-preprocessing-the-megadepth-dataset).
+- **7Scenes / Cambridge Landmarks**: process with the [GoMatch tools](https://github.com/dvl-tum/gomatch/tree/main/tools).
+- **Aachen Day-Night**: download the [dataset](https://www.visuallocalization.net/datasets/) and [retrieval pairs](https://github.com/cvg/Hierarchical-Localization/tree/master/pairs/aachen) to `data/aachen` (used directly by `eval_aachen.py`, no cache needed).
+
+Everything lives under the data root (default `data/`, see `configs/datasets.yml`):
+
+```
+data/
+├── MegaDepth_undistort/            # training + matching evaluation
+├── gomatch_data/                   # 7scenes / cambridge
+└── aachen/                         # Aachen Day-Night (hloc pipeline)
+```
+
+## Multi-Detector Keypoint Caches
+
+`extract_features.py` generates the per-detector caches
 (`desc_cache/<DIR>/<scene>.npy`, entries `{kpts, descs, color}`) on top of the
-DGC-GNN / GoMatch processed data. GeoMix only uses keypoints and colors, so
-descriptors are stored as placeholders (`--save_descs` keeps real ones). The
-top 1024 keypoints by score are kept; already-cached images are skipped.
+processed data. GeoMix only uses keypoints and colors, so descriptors are
+stored as placeholders (`--save_descs` keeps real ones). The top 1024
+keypoints by score are kept; already-cached images are skipped.
 
 | `--detector` | cache dir | backend |
 |---|---|---|
@@ -25,6 +42,6 @@ python tools/extract_features.py --detector dedode --splits test \
     --dedode_repo /path/to/DeDoDe --dedode_ckpt /path/to/dedode_detector_L_v2.pth
 ```
 
-MegaDepth images come from the [D2-Net preprocessing](https://github.com/mihaidusmanu/d2-net#downloading-and-preprocessing-the-megadepth-dataset); use `--im_dir` if they live outside `data/`.
+Use `--im_dir` if the images live outside `data/`.
 
 **Environment:** use a recent Python/torch environment (not the `geomix` training env) with your detector's dependency (`transformers>=4.39` / `kornia>=0.6.7` / the official repos), and pin `numpy<2` so the caches stay readable by the NumPy 1.x training env.
