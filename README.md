@@ -4,7 +4,7 @@ Authors: [Yejun Zhang](https://yejunzhang.github.io), [Xinjue Wang](https://xnnj
 
 [[arXiv](https://arxiv.org/abs/2607.02486)]
 
-GeoMix is a descriptor-free 2D-3D matching framework for visual localization. Building on [A2-GNN](https://github.com/YejunZhang/a2-gnn), it adds directional and distance-aware local embeddings, learnable global context nodes (`--num_registers`), and a Mix-Training strategy over multiple keypoint detectors (SIFT + SuperPoint + DISK).
+GeoMix is a descriptor-free 2D-3D matching framework for visual localization, built on [A2-GNN](https://github.com/YejunZhang/a2-gnn) with directional and distance-aware local embeddings, learnable global context nodes, and Mix-Training over multiple keypoint detectors (SIFT + SuperPoint + DISK).
 
 ![GeoMix pipeline](assets/pipeline.png)
 
@@ -15,24 +15,15 @@ git clone https://github.com/YejunZhang/Geomix.git
 cd Geomix
 conda env create -f environment.yml
 conda activate geomix
-```
 
-We need to install the corresponding ```torch_scatter=2.0.8```
-
-```
 wget https://data.pyg.org/whl/torch-1.8.0%2Bcu111/torch_scatter-2.0.8-cp37-cp37m-linux_x86_64.whl
 pip install torch_scatter-2.0.8-cp37-cp37m-linux_x86_64.whl
-```
-
-Now install GeoMix
-
-```
 pip install . --find-links https://data.pyg.org/whl/torch-1.8.0+cu11.1.html
 ```
 
 ## Data Preparation
 
-We build on the data format of [GoMatch](https://github.com/dvl-tum/gomatch) / [DGC-GNN](https://github.com/AaltoVision/DGC-GNN-release). The DGC-GNN release [here](https://drive.google.com/drive/folders/1ae8CHU42wTJleRrlG9GBY4V-PIdqsM0O?usp=sharing) provides the processed MegaDepth base data (scene files, 3D points, and the SIFT keypoint cache); 7Scenes / Cambridge Landmarks are processed with the [GoMatch tools](https://github.com/dvl-tum/gomatch/tree/main/tools). Put everything under the data root (default `data/`, see `configs/datasets.yml`):
+We follow the data format of [GoMatch](https://github.com/dvl-tum/gomatch) / [DGC-GNN](https://github.com/AaltoVision/DGC-GNN-release): download the processed MegaDepth base data (with SIFT cache) [here](https://drive.google.com/drive/folders/1ae8CHU42wTJleRrlG9GBY4V-PIdqsM0O?usp=sharing) and process 7Scenes / Cambridge with the [GoMatch tools](https://github.com/dvl-tum/gomatch/tree/main/tools), placed under `data/`:
 
 ```
 data/
@@ -40,14 +31,7 @@ data/
 └── gomatch_data/                   # 7scenes / cambridge
 ```
 
-Mix-Training and cross-detector evaluation additionally need SuperPoint / DISK caches (train+val+test) and R2D2 / DeDoDe caches (test only, zero-shot evaluation), which are generated with [tools/extract_features.py](tools/extract_features.py):
-
-```
-python tools/extract_features.py --detector superpoint --splits train val test
-python tools/extract_features.py --detector disk --splits train val test
-```
-
-See [tools/README.md](tools/README.md) for details and the R2D2 / DeDoDe commands.
+The SuperPoint / DISK / R2D2 / DeDoDe keypoint caches are generated with [tools/extract_features.py](tools) — see [tools/README.md](tools/README.md).
 
 ## Training & Evaluation
 
@@ -61,7 +45,7 @@ sh train.sh
 sh eval.sh
 ```
 
-Visual localization on Cambridge Landmarks / 7Scenes uses the same entrypoint, e.g.:
+Visual localization on Cambridge Landmarks / 7Scenes uses the same entrypoint, with `--dataset` in `{megadepth, cambridge_sift, 7scenes_sift_v2, 7scenes_superpoint_v2}`:
 
 ```
 python -m geomix_eval.benchmark --root_dir . --ckpt geomix_best.ckpt \
@@ -69,16 +53,9 @@ python -m geomix_eval.benchmark --root_dir . --ckpt geomix_best.ckpt \
     --covis_k_nums 10 --odir outputs/eval/cambridge
 ```
 
-with `--dataset` in `{megadepth, cambridge_sift, 7scenes_sift_v2, 7scenes_superpoint_v2}`.
-
-### Aachen Day-Night
-
-Aachen is processed and evaluated with an [hloc](https://github.com/cvg/Hierarchical-Localization)-based pipeline (`eval_aachen.py`): it extracts local features, retriangulates the reference 3D model with the chosen detector (so the 2D and 3D sides use the same detector type), matches query keypoints to the retrieved 3D points with GeoMix, and writes predicted poses in the [visuallocalization.net](https://www.visuallocalization.net/) submission format.
-
-Download the [Aachen Day-Night dataset](https://www.visuallocalization.net/datasets/) to `data/aachen` (images, `3D-models`, `aachen.db`, queries) and the retrieval pairs `pairs-db-covis20.txt` / `pairs-query-netvlad50.txt` from [hloc pairs/aachen](https://github.com/cvg/Hierarchical-Localization/tree/master/pairs/aachen) to `data/aachen/pairs`, then with hloc installed:
+Aachen Day-Night uses an [hloc](https://github.com/cvg/Hierarchical-Localization)-based pipeline that retriangulates the 3D model with the chosen detector and writes poses in the [visuallocalization.net](https://www.visuallocalization.net/) format. Download the [dataset](https://www.visuallocalization.net/datasets/) and [retrieval pairs](https://github.com/cvg/Hierarchical-Localization/tree/master/pairs/aachen) to `data/aachen`, then:
 
 ```
-python eval_aachen.py --detector_2d sift --detector_3d sift
 python eval_aachen.py --detector_2d superpoint --detector_3d superpoint
 ```
 
