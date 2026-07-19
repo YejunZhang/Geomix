@@ -32,13 +32,22 @@ pip install . --find-links https://data.pyg.org/whl/torch-1.8.0+cu11.1.html
 
 ## Data Preparation
 
-We use the same dataset as [GoMatch](https://github.com/dvl-tum/gomatch) / [DGC-GNN](https://github.com/AaltoVision/DGC-GNN-release) and the processed MegaDepth data can be found [here](https://drive.google.com/drive/folders/1ae8CHU42wTJleRrlG9GBY4V-PIdqsM0O?usp=sharing). Please download the datasets and put them under the data root (default `data/`, see `configs/datasets.yml`):
+We build on the data format of [GoMatch](https://github.com/dvl-tum/gomatch) / [DGC-GNN](https://github.com/AaltoVision/DGC-GNN-release). The DGC-GNN release [here](https://drive.google.com/drive/folders/1ae8CHU42wTJleRrlG9GBY4V-PIdqsM0O?usp=sharing) provides the processed MegaDepth base data (scene files, 3D points, and the SIFT keypoint cache); 7Scenes / Cambridge Landmarks are processed with the [GoMatch tools](https://github.com/dvl-tum/gomatch/tree/main/tools). Put everything under the data root (default `data/`, see `configs/datasets.yml`):
 
 ```
 data/
 ├── MegaDepth_undistort/            # training + matching evaluation
-└── gomatch_data/                   # 7scenes / cambridge / aachen_v1
+└── gomatch_data/                   # 7scenes / cambridge
 ```
+
+Mix-Training and cross-detector evaluation additionally need SuperPoint / DISK caches (train+val+test) and R2D2 / DeDoDe caches (test only, zero-shot evaluation), which are generated with [tools/extract_features.py](tools/extract_features.py):
+
+```
+python tools/extract_features.py --detector superpoint --splits train val test
+python tools/extract_features.py --detector disk --splits train val test
+```
+
+See [tools/README.md](tools/README.md) for details and the R2D2 / DeDoDe commands.
 
 ## Training & Evaluation
 
