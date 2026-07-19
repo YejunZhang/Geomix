@@ -31,6 +31,19 @@ for descriptor-based baselines).
 All detectors keep the top 1024 keypoints by detection score. Extraction is
 resume-safe: already-cached images are skipped.
 
+### Environment
+
+The extraction tools do **not** run in the pinned `geomix` training environment
+(Python 3.7 / torch 1.8) — use a separate, more recent environment with the
+dependencies of your chosen detector (they are imported lazily):
+
+- `superpoint`: `transformers>=4.39` (Python >= 3.8; tested with Python 3.10 / torch 2.x)
+- `disk`: `kornia>=0.6.7` (torch >= 1.10; tested with kornia 0.6.12 / torch 1.13)
+- `r2d2` / `dedode`: follow the official repos' requirements
+
+**Important:** install `numpy<2` in the extraction environment. Caches written
+with NumPy 2.x cannot be unpickled by the NumPy 1.x training environment.
+
 ```
 # Mix-Training caches (all splits)
 python tools/extract_features.py --detector superpoint --splits train val test
