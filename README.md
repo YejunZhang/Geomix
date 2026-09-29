@@ -66,13 +66,16 @@ Please consider citing our papers if you find this code useful for your research
 ```
 @inproceedings{zhang2026geomix,
       title={GeoMix: Descriptor-Free Visual Localization via Global Context and Multi-Detector Training},
-      author={Yejun Zhang and Xinjue Wang and Zihan Wang and Esa Rahtu and Juho Kannala},
-      booktitle={European Conference on Computer Vision (ECCV)},
+      author={Zhang, Yejun and Wang, Xinjue and Wang, Zihan and Rahtu, Esa and Kannala, Juho},
+      booktitle={Computer Vision -- ECCV 2026},
+      publisher={Springer},
+      address={Cham},
+      pages={75--94},
       year={2026},
+      doi={10.1007/978-3-032-37010-5_5},
       eprint={2607.02486},
       archivePrefix={arXiv},
       primaryClass={cs.CV},
-      url={https://arxiv.org/abs/2607.02486},
 }
 
 @inproceedings{zhang2025a2gnn,
