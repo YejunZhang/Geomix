@@ -69,12 +69,19 @@ Please consider citing our papers if you find this code useful for your research
       author={Yejun Zhang and Xinjue Wang and Zihan Wang and Esa Rahtu and Juho Kannala},
       booktitle={European Conference on Computer Vision (ECCV)},
       year={2026},
+      eprint={2607.02486},
+      archivePrefix={arXiv},
+      primaryClass={cs.CV},
+      url={https://arxiv.org/abs/2607.02486},
 }
 
 @inproceedings{zhang2025a2gnn,
       title={A2-GNN: Angle-Annular GNN for Visual Descriptor-free Camera Relocalization},
       author={Yejun Zhang and Shuzhe Wang and Juho Kannala},
-      booktitle={International Conference on 3D Vision (3DV)},
+      booktitle={2025 International Conference on 3D Vision (3DV)},
+      pages={357--368},
       year={2025},
+      organization={IEEE},
+      doi={10.1109/3DV66043.2025.00038},
 }
 ```
